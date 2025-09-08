@@ -116,7 +116,16 @@
       font-weight: bold;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
     }
-
+/* MODIFICADO: Estilo para los nuevos botones en el hero */
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem; /* Espacio entre los botones */
+  margin-top: 2rem;
+}
+/* FIN MODIFICADO */
     .pill {
       display: inline-flex;
       align-items: center;
@@ -139,6 +148,16 @@
     }
     .pill:hover { background: #F87A90; transform: translateY(-2px); }
     .pill i { pointer-events: none; font-size: 1.1rem; }
+
+    /* NUEVO ESTILO PARA EL BOTÓN DE INFO */
+    .pill-info {
+        background: var(--text); /* Marrón oscuro */
+        box-shadow: 0 2px 8px rgba(92, 58, 33, 0.3); /* Sombra acorde al color */
+    }
+    .pill-info:hover {
+        background: #7c5a40; /* Tono más claro de marrón al pasar el cursor */
+    }
+    /* FIN NUEVO ESTILO */
 
     section { padding: 4rem 2rem; max-width: 1200px; margin: auto; }
     .grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; }
@@ -557,12 +576,22 @@
 
     function verDescripcion(img, titulo, descripcion, carpeta="vasito") {
       const modal = document.getElementById("modal");
-      document.getElementById("modalImg").src = "imagenes/" + carpeta + "/" + img;
+      // La imagen es opcional, si no se envía, se oculta el contenedor
+      const imgWrap = document.getElementById("modalImg").parentNode;
+      if (img) {
+          imgWrap.style.display = "block";
+          document.getElementById("modalImg").src = "imagenes/" + carpeta + "/" + img;
+      } else {
+          imgWrap.style.display = "none";
+          document.getElementById("modalImg").src = "";
+      }
+      
       document.getElementById("modalTitulo").innerText = titulo;
       document.getElementById("modalDescripcion").innerText = descripcion;
       modal.style.display = "flex";
       document.addEventListener("keydown", escClose);
     }
+    
     function cerrarModal(e) {
       if (!e || e.target === document.getElementById("modal") || e.target.classList.contains("close")) {
         document.getElementById("modal").style.display = "none";
@@ -680,7 +709,10 @@
               <img src="imagenes/logogelartegourmet.png" alt="Logo GelArte Gourmet">
               <h2>GelArte Gourmet</h2>
               <p>Gelatinas y bebidas funcionales elaboradas con: plantas medicinales, fruta natural, cereales enteros y probióticos. Nuestros productos no contienen aditivos alimentarios.</p>
-               <div class="productos">
+              <div class="hero-buttons">
+                <a class="pill pill-info" onclick="verDescripcion(null, '¿Qué son los Alimentos Funcionales?', 'Los alimentos funcionales son aquellos que, más allá de su valor nutricional básico, contienen componentes que proporcionan beneficios adicionales para la salud. Estos beneficios pueden incluir la mejora de la función intestinal, la reducción del riesgo de enfermedades crónicas, la estimulación del sistema inmunológico, entre otros. Ejemplos de alimentos funcionales son los que contienen probióticos, prebióticos, fibra, fitoquímicos, etc.\\n\\nEn GelArte Gourmet, nuestras gelatinas y bebidas están diseñadas como alimentos funcionales, ya que no solo son nutritivas, sino que incorporan probióticos, cereales enteros y plantas medicinales para mejorar tu bienestar.')">¿Qué son alimentos funcionales?</a>
+              </div>
+              <div class="productos">
                 <a class="pill" onclick="cargarPagina('gelatinas')">Gelatinas</a>
                 <a class="pill" onclick="cargarPagina('bebidasFuncionales')">Bebidas</a>
                 <a class="pill" onclick="cargarPagina('probioticos')">Probióticos</a>
@@ -959,5 +991,4 @@
     });
   </script>
 </body>
-
 </html>

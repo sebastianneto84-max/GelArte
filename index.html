@@ -344,6 +344,13 @@
       margin-bottom: 1rem;
     }
 
+    /* --- INICIO: NUEVO ESTILO SOLO PARA IMÁGENES DE GELATINAS EN VASITO --- */
+    #catalogo-vasito .card img {
+        max-width: 220px;
+        max-height: 180px;
+    }
+    /* --- FIN: NUEVO ESTILO --- */
+
     @media (max-width: 992px) {
       .catalog-wrapper {
         max-width: 592px; /* Ancho de 2 tarjetas (280*2) + 1 gap (32px) = 592px */
@@ -358,13 +365,13 @@
       }
     }
 
-    /* --- INICIO: NUEVO ESTILO PARA EL RECUADRO DE INFORMACIÓN --- */
+    /* --- INICIO: ESTILO MODIFICADO PARA EL RECUADRO DE INFORMACIÓN --- */
     .info-box {
-      background: #EFE6DA; /* Color usado en el carrito */
+      background: #EFE6DA;
       border-radius: 0.75rem;
       padding: 1rem 1.5rem;
-      margin: 2rem auto; /* Espacio arriba/abajo y centrado */
-      max-width: 500px;
+      margin: 2rem auto; /* Esto lo mantiene centrado */
+      width: fit-content; /* Esto ajusta el ancho al contenido */
       border: 1px solid rgba(0,0,0,0.05);
       text-align: left; /* Alineación del texto a la izquierda */
     }
@@ -824,7 +831,7 @@
           html = `
             <section>
               <h2>Gelatinas Probióticas</h2>
-              <p>Ricas en colágeno. Excelente fuente de proteínas.</p>
+              <p><strong>Ricas en colágeno. Excelente fuente de proteínas.</strong></p>
               <div class="grid">
                 <div class="card">
                   <h3>Gelatinas en Vasito</h3>
@@ -847,9 +854,9 @@
 
         if (seccion === "gelavasito") {
           html = `
-            <section>
+            <section id="catalogo-vasito">
               <h2>Gelatinas en Vasito</h2>
-              <p>Prácticas presentations individuales, para disfrutar en cualquier momento.<br>Contenido: 125 gramos.</p>
+              <p><strong>Prácticas presentations individuales, para disfrutar en cualquier momento.<br>Contenido: 125 gramos.<strong></p>
               
               <div class="info-box">
                 <p>Para pedidos, las cantidades mínimas son de:</p>
@@ -1168,5 +1175,3 @@
   </script>
 </body>
 </html>
-
-

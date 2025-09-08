@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GelArte Gourmet - Gelatinas y Bebidas Probióticas</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    :root {
+      /* Paleta de colores cálida y gourmet */
+      --bg: #FFF8F0; /* Tono crema para el fondo */
+      --card-bg: rgba(255, 255, 255, 0.5); /* Blanco semitransparente */
+      --text: #5C3A21; /* Marrón oscuro para el texto */
+      --accent: #E54F6D; /* Color coral-fresa para acentos y botones */
+      --hover: rgba(255, 255, 255, 0.8); /* Blanco más opaco para hover */
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 248, 240, 0.8);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .logo { font-weight: bold; color: var(--accent); }
+    nav { position: relative; margin-left: auto; /* Empuja el menú a la izquierda */}
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover { color: var(--accent); }
+    nav li { position: relative; }
+    nav ul ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.5rem 0;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    nav li:hover > ul { display: block; }
+    nav ul ul li { padding: 0.5rem 1rem; white-space: nowrap; }
+    nav ul ul li a:hover { color: var(--accent); }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--text);
+      /* NUEVO: Asegura el orden en móvil */
+      order: 3;
+      margin-left: 1rem;
+    }
+    @media (max-width: 768px) {
+      header { flex-wrap: wrap; }
+      nav { order: 4; width: 100%; }
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: #FFF8F0;
+        width: 100%;
+        padding: 1rem;
+      }
+      nav ul.show { display: flex; }
+      nav ul ul { position: static; background: none; box-shadow: none; }
+      nav li:hover > ul { display: none; }
+      .cart-container { margin-left: 1rem; /* Espacio con el menú hamburguesa */ }
+    }
+
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+      background: url("imagenes/fondo_portada.png") center/cover no-repeat fixed;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 248, 240, 0.70);
+      z-index: 0;
+    }
+    .hero * { position: relative; z-index: 1; }
+    .hero img { max-width: 450px; margin-bottom: 0.1rem; }
+    .hero h2 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--accent); }
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 2rem;
+      color: #000;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: background 0.25s ease, transform 0.25s ease;
+      cursor: pointer;
+      margin: 0.3rem;
+      font-size: 1rem;
+      min-width: 44px;
+      min-height: 44px;
+      border: none;
+      box-shadow: 0 2px 8px rgba(229, 79, 109, 0.3);
+    }
+    .pill:hover { background: #F87A90; transform: translateY(-2px); }
+    .pill i { pointer-events: none; font-size: 1.1rem; }
+
+    section { padding: 4rem 2rem; max-width: 1200px; margin: auto; }
+    .grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; }
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      padding: 1.5rem; /* Reducido para dar espacio a los botones */
+      backdrop-filter: blur(20px);
+      transition: transform 0.3s, background 0.3s;
+      width: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: space-between; /* Ajustado para distribuir espacio */
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .card:hover { transform: translateY(-5px); background: var(--hover); }
+    .card img {
+      max-width: 180px;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      display: block;
+      margin: 0 auto 1rem;
+    }
+    
+    .card-content { flex-grow: 1; } /* Contenedor para texto */
+    .card-actions { width: 100%; margin-top: 1rem; } /* Contenedor para botones */
+    
+    .card img.logo-seccion,
+    section img.logo-seccion {
+      max-width: 220px;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      display: block;
+      margin: 1rem auto;
+    }
+
+    section h2 { text-align: center; color: var(--accent); margin-bottom: 1rem; }
+    section p { max-width: 700px; margin: 0 auto 2rem; text-align: center; }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+    .social-icons a {
+        color: var(--text);
+        font-size: 1.8rem;
+        transition: color 0.3s ease;
+    }
+    .social-icons a:hover { color: var(--accent); }
+
+    footer {
+        text-align: center;
+        padding: 2rem;
+        background: #EFE6DA;
+        font-size: 0.9rem;
+    }
+
+    .fade { opacity: 0; transition: opacity 0.5s ease; }
+    .fade.show { opacity: 1; }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input, textarea {
+      padding: 0.8rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+    }
+    button, .action-btn {
+      background: var(--accent);
+      color: #fff;
+      font-weight: bold;
+      padding: 0.6rem 1rem; /* Padding ajustado */
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.25s ease;
+      font-size: 0.9rem; /* Tamaño de fuente ajustado */
+      width: 100%; /* Ocupa todo el ancho del contenedor */
+      margin-top: 0.5rem;
+    }
+    button:hover, .action-btn:hover { background: #F87A90; transform: translateY(-2px); }
+    .btn-secondary { background: #7c5a40; }
+    .btn-secondary:hover { background: #966f50; }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      background: rgba(92, 58, 33, 0.8);
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      overscroll-behavior: contain;
+    }
+    .modal-content {
+      background: #FFF8F0;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 1rem;
+      max-width: 980px;
+      width: 96%;
+      max-height: 90vh;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 1.25rem;
+      padding: 1.5rem;
+      position: relative;
+      color: var(--text);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal-img-wrap {
+      align-self: start;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: #eee;
+    }
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      max-height: 60vh;
+      object-fit: contain;
+      display: block;
+    }
+    .modal-body {
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+    .modal-body h2 {
+      margin-top: 0;
+      margin-bottom: .5rem;
+      color: var(--accent);
+    }
+    .modal-body p {
+      white-space: pre-line;
+      margin: 0;
+    }
+    .close {
+      position: absolute;
+      top: 10px; right: 12px;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--accent);
+      line-height: 1;
+      padding: .25rem .5rem;
+      border-radius: .5rem;
+      background: rgba(0,0,0,0.1);
+    }
+    .close:hover { background: rgba(0,0,0,0.2); }
+
+    @media (max-width: 900px) {
+      .modal-content {
+        grid-template-columns: 1fr;
+        max-height: 92vh;
+      }
+      .modal-content img { max-height: 35vh; }
+    }
+
+    /* ESTILOS DE CATALOGO DE GELATINAS VASITO - CORREGIDO */
+    .catalog-wrapper {
+      max-width: 904px; /* Ancho de 3 tarjetas (280*3) + 2 gaps (2rem=32px) = 904px */
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h3.catalog-heading {
+      text-align: left;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 992px) {
+      .catalog-wrapper {
+        max-width: 592px; /* Ancho de 2 tarjetas (280*2) + 1 gap (32px) = 592px */
+      }
+    }
+    @media (max-width: 640px) {
+      .catalog-wrapper {
+        max-width: 280px; /* Ancho de 1 tarjeta */
+      }
+      h3.catalog-heading {
+        text-align: center; /* Centrar el texto si solo hay una columna */
+      }
+    }
+
+    /* --- INICIO: NUEVO ESTILO PARA EL RECUADRO DE INFORMACIÓN --- */
+    .info-box {
+      background: #EFE6DA; /* Color usado en el carrito */
+      border-radius: 0.75rem;
+      padding: 1rem 1.5rem;
+      margin: 2rem auto; /* Espacio arriba/abajo y centrado */
+      max-width: 500px;
+      border: 1px solid rgba(0,0,0,0.05);
+      text-align: left; /* Alineación del texto a la izquierda */
+    }
+    .info-box p {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      text-align: left; /* Sobrescribe el centrado general de <p> */
+      font-weight: bold;
+    }
+    .info-box ul {
+      margin: 0;
+      padding-left: 20px; /* Sangría para la lista */
+    }
+    .info-box li {
+      margin-bottom: 0.25rem;
+    }
+    /* --- FIN: NUEVO ESTILO --- */
+
+
+    .productos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    
+    .curso-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 0 auto;
+      max-width: 800px;
+      margin-top: 2rem;
+      text-align: left;
+    }
+    .curso-columna ul, .curso-columna ol {
+      padding-left: 20px;
+    }
+    .curso-columna li { margin-bottom: 0.5rem; }
+    .curso-columna h3 { text-align: left; color: var(--text); }
+    
+    /* --- INICIO ESTILOS DEL CARRITO (REUBICADO EN EL HEADER) --- */
+    .cart-container {
+      position: relative; /* Ya no es 'fixed' */
+      z-index: 1000;
+      margin-left: 1.5rem; /* Espacio con el menú de navegación */
+    }
+    .cart-icon {
+      font-size: 1.8rem;
+      color: var(--text);
+      cursor: pointer;
+      position: relative;
+      background: transparent; /* Fondo transparente en el header */
+      padding: 0;
+      border-radius: 0;
+      backdrop-filter: none;
+      box-shadow: none;
+    }
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+    }
+    .cart-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 15px); /* MODIFICADO: Se abre hacia ABAJO */
+      right: 0;
+      width: 350px;
+      background: #FFF8F0;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      padding: 1.2rem;
+    }
+    .cart-dropdown.show { display: block; }
+    #cart-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 165px; /* Altura ajustada para 3-4 productos */
+      overflow-y: auto;
+    }
+    #cart-items li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #EFE6DA;
+      font-size: 0.9rem;
+    }
+    #cart-items .item-info { flex-grow: 1; text-align: left; }
+    #cart-items .item-name { font-weight: bold; display: block; }
+    #cart-items .item-qty { display: flex; align-items: center; gap: 0.5rem; }
+    #cart-items .qty-btn { cursor: pointer; font-weight: bold; }
+    #cart-items .remove-item { cursor: pointer; color: var(--accent); font-size: 1.2rem; }
+    .cart-total {
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      text-align: right;
+    }
+    .cart-info {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      background: #EFE6DA;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .cart-info strong { color: var(--text); }
+    .cart-info p { margin: 0.3rem 0; }
+    #whatsapp-checkout { width: 100%; margin-top: 1rem; }
+    /* --- FIN ESTILOS DEL CARRITO --- */
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GelArte Gourmet</div>
+    <nav>
+      <ul id="menu">
+        <li><a onclick="cargarPagina('home')">Inicio</a></li>
+        <li>
+          <a>Sobre Nosotros ▾</a>
+          <ul>
+            <li><a onclick="cargarPagina('mision')">Misión</a></li>
+            <li><a onclick="cargarPagina('vision')">Visión</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Productos ▾</a>
+          <ul>
+            <li><a onclick="cargarPagina('gelatinas')">Nuestras Gelatinas</a></li>
+            <li><a onclick="cargarPagina('bebidasFuncionales')">Bebidas Funcionales</a></li>
+            <li><a onclick="cargarPagina('kitsProbioticos')">Kits de Probióticos</a></li>
+            <li><a onclick="cargarPagina('cursoFermentos')">Curso de Fermentos</a></li>
+          </ul>
+        </li>
+        <li><a href="https://maps.app.goo.gl/2QYTkacSMGWmdes77?g_st=ac" target="_blank">Nuestra Ubicación</a></li>
+      </ul>
+    </nav>
+
+    <div class="cart-container">
+      <div class="cart-icon" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cart-count">0</span>
+      </div>
+      <div class="cart-dropdown" id="cart-dropdown">
+        <h4>Mi Pedido</h4>
+        <ul id="cart-items">
+          </ul>
+        <div class="cart-total">
+          Total: <span id="cart-total">0.00</span> USD
+        </div>
+        <div class="cart-info">
+            <p><strong>¿Necesitas factura?</strong> Avísale a nuestro asesor por WhatsApp.</p>
+            <p>Recuerda: para facturar se debe añadir el 15% de IVA. El asesor te dará el precio final.</p>
+            <p>¡El asesor también te compartirá los datos para el pago por transferencia o depósito!</p>
+        </div>
+        <button id="whatsapp-checkout" class="action-btn">
+          <i class="fab fa-whatsapp"></i> Comprar por WhatsApp
+        </button>
+      </div>
+    </div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </header>
+  
+  <main id="contenido" class="fade show"></main>
+
+  <div id="modal" class="modal" onclick="cerrarModal(event)">
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <span class="close" onclick="cerrarModal()" aria-label="Cerrar">×</span>
+      <div class="modal-img-wrap">
+        <img id="modalImg" src="" alt="">
+      </div>
+      <div class="modal-body">
+        <h2 id="modalTitulo"></h2>
+        <p id="modalDescripcion"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/15qo4b3sFJ/" target="_blank" aria-label="Facebook GelArte Gourmet">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://wa.me/593996150088" target="_blank" aria-label="WhatsApp GelArte Gourmet">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    </div>
+    © 2025 GelArte Gourmet — Todos los derechos reservados.
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("show");
+    }
+
+    function verDescripcion(img, titulo, descripcion, carpeta="vasito") {
+      const modal = document.getElementById("modal");
+      document.getElementById("modalImg").src = "imagenes/" + carpeta + "/" + img;
+      document.getElementById("modalTitulo").innerText = titulo;
+      document.getElementById("modalDescripcion").innerText = descripcion;
+      modal.style.display = "flex";
+      document.addEventListener("keydown", escClose);
+    }
+    function cerrarModal(e) {
+      if (!e || e.target === document.getElementById("modal") || e.target.classList.contains("close")) {
+        document.getElementById("modal").style.display = "none";
+        document.removeEventListener("keydown", escClose);
+      }
+    }
+    function escClose(ev) { if (ev.key === "Escape") cerrarModal(); }
+    
+    // --- INICIO LÓGICA DEL CARRITO ---
+    let cart = [];
+    const cartDropdown = document.getElementById('cart-dropdown');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    const whatsappCheckoutBtn = document.getElementById('whatsapp-checkout');
+
+    function toggleCart() {
+      cartDropdown.classList.toggle('show');
+    }
+
+    function addToCart(name, price) {
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({ name, price, quantity: 1 });
+      }
+      updateCart();
+      // Muestra el carrito por 2 segundos al añadir un producto
+      cartDropdown.classList.add('show');
+      setTimeout(() => cartDropdown.classList.remove('show'), 2000);
+    }
+
+    function changeQuantity(name, change) {
+      const item = cart.find(item => item.name === name);
+      if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+          cart = cart.filter(cartItem => cartItem.name !== name);
+        }
+      }
+      updateCart();
+    }
+    
+    function removeItem(name) {
+      cart = cart.filter(item => item.name !== name);
+      updateCart();
+    }
+
+    function updateCart() {
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
+      let count = 0;
+      
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p style="text-align:center;padding:1rem 0;">Tu carrito está vacío.</p>';
+      } else {
+         cart.forEach(item => {
+          const itemElement = document.createElement('li');
+          itemElement.innerHTML = `
+            <div class="item-info">
+              <span class="item-name">${item.name}</span>
+              <span>$${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+            <div class="item-qty">
+              <span class="qty-btn" onclick="changeQuantity('${item.name}', -1)">-</span>
+              <b>${item.quantity}</b>
+              <span class="qty-btn" onclick="changeQuantity('${item.name}', 1)">+</span>
+            </div>
+            <span class="remove-item" onclick="removeItem('${item.name}')">×</span>
+          `;
+          cartItemsContainer.appendChild(itemElement);
+          total += item.price * item.quantity;
+          count += item.quantity;
+        });
+      }
+
+      cartTotal.textContent = total.toFixed(2);
+      cartCount.textContent = count;
+      whatsappCheckoutBtn.disabled = cart.length === 0;
+    }
+
+    whatsappCheckoutBtn.addEventListener('click', () => {
+      if (cart.length === 0) return;
+
+      let message = '¡Hola GelArte Gourmet! 👋 Me gustaría hacer el siguiente pedido:\n\n';
+      let total = 0;
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        message += `*${item.quantity}x* - ${item.name} - *$${itemTotal.toFixed(2)}*\n`;
+        total += itemTotal;
+      });
+
+      message += `\n*SUBTOTAL: $${total.toFixed(2)}*\n\n`;
+      message += `Espero la confirmación y los datos para realizar el pago. ¡Gracias! 😊`;
+      
+      const whatsappURL = `https://wa.me/593996150088?text=${encodeURIComponent(message)}`;
+      window.open(whatsappURL, '_blank');
+    });
+    // --- FIN LÓGICA DEL CARRITO ---
+
+    function cargarPagina(seccion) {
+      if (!seccion) seccion = "home";
+      location.hash = seccion;
+      const cont = document.getElementById("contenido");
+      cont.classList.remove("show");
+
+      setTimeout(() => {
+        let html = "";
+
+        if (seccion === "home") {
+          html = `
+            <section class="hero">
+              <img src="imagenes/logogelartegourmet.png" alt="Logo GelArte Gourmet">
+              <h2>GelArte Gourmet</h2>
+              <p>Gelatinas y bebidas funcionales elaboradas con: plantas medicinales, fruta natural, cereales enteros y probióticos. Nuestros productos no contienen aditivos alimentarios.</p>
+               <div class="productos">
+                <a class="pill" onclick="cargarPagina('gelatinas')">Gelatinas</a>
+                <a class="pill" onclick="cargarPagina('bebidasFuncionales')">Bebidas</a>
+                <a class="pill" onclick="cargarPagina('probioticos')">Probióticos</a>
+                <a class="pill" onclick="cargarPagina('kitsProbioticos')">Kits para Producir Probióticos</a>
+                <a class="pill" onclick="cargarPagina('cursoFermentos')">Curso de Fermentos</a>
+              </div>
+            </section>`;
+        }
+        
+        if (seccion === "mision") {
+          html = `
+            <section>
+              <h2>Nuestra Misión</h2>
+              <p>Desarrollar y ofrecer alimentos funcionales probióticos, nutricionalmente completos de alta calidad, 100% naturales, que combinen salud, sabor y bienestar, contribuyendo a mejorar los hábitos alimenticios de nuestros clientes. Nos comprometemos a brindar productos libres de aditivos alimentarios, respetando normativas de inocuidad, y a fomentar la educación sobre nutrición saludable en cada interacción.</p>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('home')">Volver al Inicio</a>
+              </div>
+            </section>`;
+        }
+
+        if (seccion === "vision") {
+          html = `
+            <section>
+              <h2>Nuestra Visión</h2>
+              <p>Ser reconocidos como líderes en la producción y comercialización de alimentos funcionales probióticos en Ecuador, ofreciendo productos innovadores, naturales y saludables que mejoren la calidad de vida de las personas, promoviendo así una alimentación consciente y equilibrada..</p>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('home')">Volver al Inicio</a>
+              </div>
+            </section>`;
+        }
+
+        if (seccion === "gelatinas") {
+          html = `
+            <section>
+              <h2>Gelatinas Probióticas</h2>
+              <p>Ricas en colágeno. Excelente fuente de proteínas.</p>
+              <div class="grid">
+                <div class="card">
+                  <h3>Gelatinas en Vasito</h3>
+                  <img src="imagenes/gelavasito.jpg" class="logo-seccion" alt="Gelatinas en vasito">
+                  <p>Saludables, nutritivas y deliciosas. Listas para disfrutar en cualquier momento.</p>
+                  <a class="pill" onclick="cargarPagina('gelavasito')">Ver Catálogo</a>
+                </div>
+                <div class="card">
+                  <h3>Gelatinas Decoradas</h3>
+                  <img src="imagenes/geladecoradas.jpg" class="logo-seccion" alt="Gelatinas decoradas">
+                  <p>Gelatinas artísticas y saludables, ideales para tus eventos y ocasiones especiales.</p>
+                  <a class="pill" onclick="cargarPagina('geladecoradas')">Ver Catálogo</a>
+                </div>
+              </div>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('home')">Volver al Inicio</a>
+              </div>
+            </section>`;
+        }
+
+        if (seccion === "gelavasito") {
+          html = `
+            <section>
+              <h2>Gelatinas en Vasito</h2>
+              <p>Prácticas presentaciones individuales, para disfrutar en cualquier momento.<br>Contenido: 125 gramos.</p>
+              
+              <div class="info-box">
+                <p>Para pedidos las cantidades mínimas son de:</p>
+                <ul>
+                  <li>6 unidades para 1 sabor</li>
+                  <li>4 unidades por sabor, para 2 o más sabores</li>
+                </ul>
+              </div>
+              <div class="catalog-wrapper">
+                <h3 class="catalog-heading">En base agua</h3>
+                <div class="grid">
+                  <div class="card"><img src="imagenes/vasito/jamaica.jpg" alt="GELAFLORDEJAMAICA"><div class="card-content"><h4>GELAFLORDEJAMAICA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('jamaica.jpg','GELAFLORDEJAMAICA','Combina, los efectos antiinflamatorios y antihipertensivos que posee la flor de jamaica, con el sabor refrescante de la naranja.\\n\\nIngredientes: Flor de Jamaica, Té negro, Manzana, Naranja, Panela granulada, Gelatina sin sabor y Colágeno hidrolizado. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.90 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaFlorDeJamaica (vaso)', 0.90)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/moringa.jpg" alt="GELATVERDE"><div class="card-content"><h4>GELATVERDE</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('moringa.jpg','GELATVERDE','Gracias a la sinergia entre té verde y manzanilla, se mejora el metabolismo de carbohidratos y lipidos con un efecto adelgazante. Fuerte antioxidante.\\n\\nIngredientes: Té verde, Manzanilla, Piña, Maracuyá, Panela granulada, Gelatina sin sabor y Colágeno Hidrolizado. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.90 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaTVerde (vaso)', 0.90)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/horchata.jpg" alt="GELA FLORAPASIÓN"><div class="card-content"><h4>GELA FLORAPASIÓN</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('horchata.jpg','GELA FLORAPASIÓN','Ansiolítica, reduce la ansiedad, el estrés y la tensión del sistema nervioso, lo que mejora el estado de ánimo.\\n\\nIngredientes: Pasiflora, Amaranto, Maracuyá, Panela granulada, Gelatina sin sabor y Colágeno Hidrolizado. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.90 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('Gela Florapasión (vaso)', 0.90)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/uvalimon.jpg" alt="GELAUVALIMÓN"><div class="card-content"><h4>GELAUVALIMÓN</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('uvalimon.jpg','GELAUVALIMÓN','Infusión refrescante de uva verde y limón con un toque de manzanilla.\\n\\nIngredientes: Limón, Uva verde, Manzanilla, Panela granulada, Gelatina sin sabor y Colágeno hidrolizado. Probiótico: Kéfir de agua y Kombucha.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.90 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaUvaLimón (vaso)', 0.90)">Añadir al Carrito</button></div></div>
+                </div>
+                <h3 class="catalog-heading">En base leche</h3>
+                <div class="grid">
+                  <div class="card"><img src="imagenes/vasito/curcumaracuya.jpg" alt="GELACURCUMARACUYÁ"><div class="card-content"><h4>GELACURCUMARACUYÁ</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('curcumaracuya.jpg','GELACURCUMARACUYÁ','El equilibrio perfecto entre lo saludable de la cúrcuma y el sabor exótico y refrescante del maracuyá.\\n\\nIngredientes: Leche entera, Cúrcuma, Pulpa de maracuyá, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.95 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaCurcumaracuyá (vaso)', 0.95)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/chococanela.jpg" alt="GELACHOCOCANELA"><div class="card-content"><h4>GELACHOCOCANELA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('chococanela.jpg','GELACHOCOCANELA','El abrazo dulce y reconfortante del chocolate orgánico y la canela.\\n\\nIngredientes: Leche entera, Chocolate semiamargo orgánico, Canela, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.95 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaChococanela (vaso)', 0.95)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/avena.jpg" alt="GELAVENA ESPECIAS DULCES"><div class="card-content"><h4>GELAVENA ESPECIAS DULCES</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('avena.jpg','GELAVENA ESPECIAS DULCES','Un postre reconfortante con la calidez de la avena y un toque delicioso de especias dulces.\\n\\nIngredientes: Leche entera, Avena entera, Canela, Pimienta dulce, Clavo de olor, Vainilla, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.95 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaAvena Especias (vaso)', 0.95)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/moraremolacha.jpg" alt="GELAMORAREMOLACHA"><div class="card-content"><h4>GELAMORAREMOLACHA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('moraremolacha.jpg','GELAMORAREMOLACHA','Una sorprendente y deliciosa combinación con la dulzura de la mora y las propiedades de la remolacha.\\n\\nIngredientes: Leche entera, Pulpa de Remolacha, Pulpa de Mora, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.95 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMoraRemolacha (vaso)', 0.95)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/yogukefir.jpg" alt="GELAYOGUKÉFIR"><div class="card-content"><h4>GELAYOGUKÉFIR</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('yogukefir.jpg','GELAYOGUKÉFIR','La doble dosis de probióticos en un postre cremoso que combina el sabor del yogurt natural y el kéfir.\\n\\nIngredientes: Leche entera, Yogurt Natural (Probiótico 1), Panela granulada, Vainilla y Gelatina sin sabor. Probiótico 2: Kéfir de Leche.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.95 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaYogukéfir (vaso)', 0.95)">Añadir al Carrito</button></div></div>
+                  <div class="card"><img src="imagenes/vasito/matcha.jpg" alt="GELAMATCHA"><div class="card-content"><h4>GELAMATCHA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('matcha.jpg','GELAMATCHA','La capacidad antioxidante del té matcha combinada con el poder de los probióticos.\\n\\nIngredientes: Leche entera, Té Matcha orgánico, Limón, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 125 gramos.\\n\\nPVP: 0.95 USD','vasito')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMatcha (vaso)', 0.95)">Añadir al Carrito</button></div></div>
+                </div>
+              </div>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('gelatinas')">Volver a Gelatinas</a>
+              </div>
+            </section>`;
+        }
+
+        if (seccion === "geladecoradas") {
+          html = `
+            <section>
+              <h2>Gelatinas Decoradas</h2>
+              <p>Gelatinas artísticas y saludables, ideales para ocasiones especiales.</p>
+              <h3 class="catalog-heading">En base agua</h3>
+              <div class="grid">
+                <div class="card"><img src="imagenes/decoradas/jamaica.jpg" alt="GELAFLORDEJAMAICA"><div class="card-content"><h4>GELAFLORDEJAMAICA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('jamaica.jpg','GELAFLORDEJAMAICA','Un postre refrescante y tropical que combina lo mejor de la flor de Jamaica y las frutas.\\n\\nIngredientes: Flor de Jamaica, Té negro, Manzana, Naranja, Maracuyá, Panela granulada y Gelatina sin sabor. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelaflordejaica, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaFlorDeJamaica (decorada)', 2.00)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/moringa.jpg" alt="GELAMORINGA"><div class="card-content"><h4>GELAMORINGA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('moringa.jpg','GELAMORINGA','La opción perfecta para un dulce nutritivo, lleno del poder natural de la moringa y el té verde.\\n\\nIngredientes: Moringa, Té verde, Té negro, Maracuyá, Piña, Panela granulada. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelamoringa, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMoringa (decorada)', 2.00)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/uvalimon.jpg" alt="GELAUVALIMÓN"><div class="card-content"><h4>GELAUVALIMÓN</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('uvalimon.jpg','GELAUVALIMÓN','Una fusión refrescante y clásica de uva y limón, con un toque inesperado de té.\\n\\nIngredientes: Limón, Uva, Té negro, Maracuyá, Panela granulada. Probiótico: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelauvalimón, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaUvaLimón (decorada)', 2.00)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/horchata.jpg" alt="GELAHORCHATA"><div class="card-content"><h4>GELAHORCHATA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('horchata.jpg','GELAHORCHATA','El sabor tradicional de la horchata, reinventado en un postre único y delicioso.\\n\\nIngredientes: Horchata, Té negro, Maracuyá, Panela granulada. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelahorchata, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaHorchata (decorada)', 2.00)">Añadir al Carrito</button></div></div>
+              </div>
+              <h3 class="catalog-heading">En base leche</h3>
+              <div class="grid">
+                <div class="card"><img src="imagenes/decoradas/curcumaracuya.jpg" alt="GELACURCUMARACUYÁ"><div class="card-content"><h4>GELACURCUMARACUYÁ</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('curcumaracuya.jpg','GELACURCUMARACUYÁ','El equilibrio perfecto entre lo saludable de la cúrcuma y el sabor exótico y refrescante del maracuyá.\\n\\nIngredientes: Leche entera, Cúrcuma, Pulpa de maracuyá, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelacurcumaracuya, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaCurcumaracuyá (decorada)', 2.25)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/chococanela.jpg" alt="GELACHOCOCANELA"><div class="card-content"><h4>GELACHOCOCANELA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('chococanela.jpg','GELACHOCOCANELA','El abrazo dulce y reconfortante del chocolate orgánico y la canela.\\n\\nIngredientes: Leche entera, Chocolate semiamargo orgánico, Canela, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelachococanela, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaChococanela (decorada)', 2.25)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/avena.jpg" alt="GELAVENA ESPECIAS DULCES"><div class="card-content"><h4>GELAVENA ESPECIAS DULCES</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('avena.jpg','GELAVENA ESPECIAS DULCES','Un postre reconfortante con la calidez de la avena y un toque delicioso de especias dulces.\\n\\nIngredientes: Leche entera, Avena entera, Canela, Pimienta dulce, Clavo de olor, Vainilla, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelavena Especias Dulces, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaAvena Especias (decorada)', 2.25)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/moraremolacha.jpg" alt="GELAMORAREMOLACHA"><div class="card-content"><h4>GELAMORAREMOLACHA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('moraremolacha.jpg','GELAMORAREMOLACHA','Una sorprendente y deliciosa combinación con la dulzura de la mora y las propiedades de la remolacha.\\n\\nIngredientes: Leche entera, Pulpa de Remolacha, Pulpa de Mora, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelamoraremolacha, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMoraRemolacha (decorada)', 2.25)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/yogukefir.jpg" alt="GELAYOGUKÉFIR"><div class="card-content"><h4>GELAYOGUKÉFIR</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('yogukefir.jpg','GELAYOGUKÉFIR','La doble dosis de probióticos en un postre cremoso que combina el sabor del yogurt natural y el kéfir.\\n\\nIngredientes: Leche entera, Yogurt Natural (Probiótico 1), Panela granulada, Vainilla y Gelatina sin sabor. Probiótico 2: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelayogukéfir, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaYogukéfir (decorada)', 2.25)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/decoradas/matcha.jpg" alt="GELAMATCHALIMÓN"><div class="card-content"><h4>GELAMATCHALIMÓN</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('matcha.jpg','GELAMATCHALIMÓN','La capacidad antioxidante del té matcha combinada con el poder de los probióticos.\\n\\nIngredientes: Leche entera, Té Matcha orgánico, Limón, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelamatchalimón, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMatchaLimón (decorada)', 2.25)">Añadir al Carrito</button></div></div>
+              </div>
+
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('gelatinas')">Volver a Gelatinas</a>
+              </div>
+            </section>`;
+        }
+        
+        if (seccion === "bebidasFuncionales") {
+          html = `
+            <section>
+              <h2>Bebidas Funcionales Probióticas</h2>
+              <p>Descubre nuestras bebidas fermentadas, llenas de probióticos y sabor, elaboradas para refrescar y nutrir tu cuerpo.</p>
+              <div class="grid">
+                <div class="card"><img src="imagenes/bebidas/jamaica.jpg" alt="Bebida de Flor de Jamaica"><div class="card-content"><h4>Bebida de Flor de Jamaica</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('jamaica.jpg', 'Bebida Probiótica de Flor de Jamaica', 'Una bebida refrescante y tropical que combina lo mejor de la flor de Jamaica y las frutas.\\n\\nIngredientes: Flor de Jamaica, Té negro, Manzana, Naranja, Maracuyá, Panela granulada. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 300 ml\\n\\nPVP: 0.80 USD','bebidas')">Ver más</button><button class="action-btn" onclick="addToCart('Bebida Flor de Jamaica', 0.80)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/bebidas/moringa.jpg" alt="Bebida de Moringa y Té Verde"><div class="card-content"><h4>Bebida de Moringa y Té Verde</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('moringa.jpg', 'Bebida Probiótica de Moringa y Té Verde', 'La opción perfecta para una bebida nutritiva, lleno del poder natural de la moringa y el té verde.\\n\\nIngredientes: Moringa, Té verde, Té negro, Maracuyá, Piña, Panela granulada. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 300 ml\\n\\nPVP: 0.80 USD','bebidas')">Ver más</button><button class="action-btn" onclick="addToCart('Bebida Moringa y Té Verde', 0.80)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/bebidas/multifloral.jpg" alt="Bebida de Horchata"><div class="card-content"><h4>Bebida Probiótica Multifloral</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('multifloral.jpg', 'Bebida Probiótica Multifloral', 'El sabor tradicional de la horchata, reinventado en una bebida única y deliciosa.\\n\\nIngredientes: Horchata, Té negro, Maracuyá, Panela granulada. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 300 ml\\n\\nPVP: 0.80 USD','bebidas')">Ver más</button><button class="action-btn" onclick="addToCart('Bebida Multifloral', 0.80)">Añadir al Carrito</button></div></div>
+              </div>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('home')">Volver al Inicio</a>
+              </div>
+            </section>`;
+        }
+        
+        if (seccion === "kitsProbioticos") {
+          html = `
+            <section>
+              <h2>Kits de Inicio de Probióticos</h2>
+              <p>Inicia tu propio cultivo de probióticos en casa. Nuestros kits incluyen todo lo que necesitas para empezar a crear tus propias bebidas fermentadas saludables.</p>
+              <div class="grid">
+                <div class="card"><img src="imagenes/kits/kefir_leche.jpg" alt="Kit de Kéfir de Leche"><div class="card-content"><h4>Kit de Kéfir de Leche</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('kefir_leche.jpg', 'Kit de Kéfir de Leche', 'El kit contiene:\\n1. Fermentador de vidrio tapa roscable de 500ml (incluye airlock doble burbuja y caucho de acople).\\n2. 10 gramos de nódulos de Kéfir de leche\\n3. Medio de cultivo nutritivo.\\n4. Frasco para cosecha.\\n\\nPVP: 12,50 USD', 'kits')">Ver más</button><button class="action-btn" onclick="addToCart('Kit Kéfir de Leche', 12.50)">Añadir al Carrito</button></div></div>
+                <div class="card"><img src="imagenes/kits/kefir_agua.png" alt="Kit de Kéfir de Agua"><div class="card-content"><h4>Kit de Kéfir de Agua</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('kefir_agua.png', 'Kit de Kéfir de Agua', 'El kit contiene:\\n1. Fermentador de vidrio tapa roscable de 500ml (incluye airlock doble burbuja y caucho de acople).\\n2. 20 gramos de Nódulos de Kéfir de agua\\n3. Medio de cultivo nutritivo.\\n4. Frasco para cosecha.\\n\\nPVP: 12,50 USD', 'kits')">Ver más</button><button class="action-btn" onclick="addToCart('Kit Kéfir de Agua', 12.50)">Añadir al Carrito</button></div></div>
+              </div>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('home')">Volver al Inicio</a>
+              </div>
+            </section>`;
+        }
+        
+        if (seccion === "cursoFermentos") {
+          html = `
+            <section>
+              <h2>Curso de Fermentos Probióticos</h2>
+              <p>¡Explora el mundo de las bebidas probióticas! Aprende a elaborar kéfir de leche y agua, kombucha y vinagre artesanal con este curso práctico y flexible. Diseñado para emprendedores y entusiastas de la salud natural, nuestro curso te enseñará desde lo más básico hasta técnicas avanzadas de fermentación.</p>
+              <div style="margin: 2rem auto; max-width: 640px; aspect-ratio: 16/9; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+                <iframe style="width:100%; height:100%; border:0;" src="https://www.youtube.com/embed/gBwRght7AfY" title="Curso de fermentos probióticos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+              <div class="curso-grid">
+                <div class="curso-columna">
+                  <h3>Detalles del Curso</h3>
+                  <ul><li><strong>Duración total:</strong> 4 semanas.</li><li><strong>Horas sincrónicas:</strong> 12 horas (3 reuniones semanales de 1h).</li><li><strong>Modalidad:</strong> 100% virtual (Clases en vivo + Contenido asincrónico).</li><li><strong>Horario:</strong> Lunes, Miércoles y Viernes de 19h30 a 20h30.</li><li><strong>Costo:</strong> 15 USD + IVA.</li><li>Descuentos disponibles (consultar).</li></ul>
+                  <h3>Inscripción</h3>Contáctate con un asesor de SBA vía WhatsApp</p>
+                </div>
+                <div class="curso-columna">
+                  <h3>Temario (13 módulos)</h3>
+                  <ol><li>Bienvenida: Reunión inicial.</li><li>Introducción a las bebidas probióticas.</li><li>Construye tu propio fermentador.</li><li>Producción de kéfir de leche.</li><li>Producción de kéfir de agua.</li><li>Producción de Kombucha.</li><li>Producción de vinagre artesanal.</li><li>Obtén tu madre de vinagre desde cero.</li><li>¿Es posible crear tu propio SCOBY?</li><li>Innovación en alimentos funcionales.</li><li>Clarificación de bebidas probióticas.</li><li>Conservación y almacenamiento.</li><li>Emprendimiento y fondos no reembolsables.</li></ol>
+                </div>
+              </div>
+              <div class="grid" style="margin-top: 3rem;"><div class="card"><h4>Desde Casa</h4><p>100% virtual, con soporte docente permanente para que estudies a tu ritmo.</p></div><div class="card"><h4>Emprende</h4><p>Adquiere habilidades para lanzar tu propio negocio artesanal y creativo.</p></div><div class="card"><h4>Práctico</h4><p>Combina teoría y práctica en clases dinámicas y talleres en video.</p></div></div>
+              <h3 style="text-align: center; margin-top: 3rem; color: var(--text);">¡Estudiar, emprender y crear tus bebidas nunca fue tan fácil y divertido!</h3>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="addToCart('Curso de Fermentos', 15.00)"><i class="fas fa-cart-plus"></i> Añadir al Carrito</a>
+                <a href="https://wa.me/593996150088?text=Hola%20GelArte%20Gourmet,%20por%20favor%20quiero%20inscribirme%20al%20curso%20de%20fermentos%20probióticos." target="_blank" class="pill"><i class="fab fa-whatsapp"></i> ¡Inscríbete ahora!</a>
+                <a class="pill" onclick="cargarPagina('home')">Volver al Inicio</a>
+              </div>
+            </section>`;
+        }
+        
+        if (seccion === "probioticos") {
+          html = `
+            <section>
+              <h2>Catálogo de Probióticos</h2>
+              <p>Bebidas fermentadas listas para consumir, llenas de vida y sabor.</p>
+              <div class="grid">
+                
+                <div class="card">
+                  <img src="imagenes/probioticos/kefir_agua.png" alt="Kéfir de Agua">
+                  <div class="card-content">
+                    <h4>Kéfir de Agua (400ml)</h4>
+                  </div>
+                  <div class="card-actions">
+                    <button class="btn-secondary" onclick="verDescripcion('kefir_agua.png', 'Kéfir de Agua (400ml)', 'Bebida probiótica refrescante y ligeramente carbonatada, fermentada a partir de nódulos de kéfir de agua.\\n\\nContenido: 400 ml\\n\\nPVP: 3.25 USD (no incluye IVA)', 'probioticos')">Ver más</button>
+                    <button class="action-btn" onclick="addToCart('Kéfir de Agua (400ml)', 3.25)">Añadir al Carrito</button>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <img src="imagenes/probioticos/kefir_agua_1000.png" alt="Kéfir de Agua 1000ml">
+                  <div class="card-content">
+                    <h4>Kéfir de Agua (1000ml)</h4>
+                  </div>
+                  <div class="card-actions">
+                    <button class="btn-secondary" onclick="verDescripcion('kefir_agua_1000.png', 'Kéfir de Agua (1000ml)', 'Bebida probiótica refrescante y ligeramente carbonatada, fermentada a partir de nódulos de kéfir de agua.\\n\\nContenido: 1000 ml\\n\\nPVP: 4.75 USD (no incluye IVA)', 'probioticos')">Ver más</button>
+                    <button class="action-btn" onclick="addToCart('Kéfir de Agua (1000ml)', 4.75)">Añadir al Carrito</button>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <img src="imagenes/probioticos/kefir_leche.jpg" alt="Kéfir de Leche 500ml">
+                  <div class="card-content">
+                    <h4>Kéfir de Leche (500ml)</h4>
+                  </div>
+                  <div class="card-actions">
+                     <button class="btn-secondary" onclick="verDescripcion('kefir_leche.jpg', 'Kéfir de Leche (500ml)', 'Bebida láctea fermentada, similar al yogur bebible, rica en probióticos y de sabor ligeramente ácido.\\n\\nContenido: 500 ml\\n\\nPVP: 4.00 USD (no incluye IVA)', 'probioticos')">Ver más</button>
+                    <button class="action-btn" onclick="addToCart('Kéfir de Leche (500ml)', 4.00)">Añadir al Carrito</button>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <img src="imagenes/probioticos/kefir_leche.jpg" alt="Kéfir de Leche 1000ml">
+                  <div class="card-content">
+                    <h4>Kéfir de Leche (1000ml)</h4>
+                  </div>
+                  <div class="card-actions">
+                    <button class="btn-secondary" onclick="verDescripcion('kefir_leche.jpg', 'Kéfir de Leche (1000ml)', 'Bebida láctea fermentada, similar al yogur bebible, rica en probióticos y de sabor ligeramente ácido.\\n\\nContenido: 1000 ml\\n\\nPVP: 6.25 USD (no incluye IVA)', 'probioticos')">Ver más</button>
+                    <button class="action-btn" onclick="addToCart('Kéfir de Leche (1000ml)', 6.25)">Añadir al Carrito</button>
+                  </div>
+                </div>
+
+<div class="card">
+                  <img src="imagenes/probioticos/kombucha.png" alt="Kombucha 400ml">
+                  <div class="card-content">
+                    <h4>Kombucha (400ml)</h4>
+                  </div>
+                  <div class="card-actions">
+                    <button class="btn-secondary" onclick="verDescripcion('kombucha.png', 'Kombucha (400ml)', 'Bebida probiótica a base de té fermentado por un cultivo de levaduras y bacterias (SCOBY), con un sabor único.\\n\\nContenido: 500 ml\\n\\nPVP: 3.50 USD (no incluye IVA)', 'probioticos')">Ver más</button>
+                    <button class="action-btn" onclick="addToCart('Kombucha (400ml)', 3.50)">Añadir al Carrito</button>
+                  </div>
+                </div>
+                
+                <div class="card">
+                  <img src="imagenes/probioticos/kombucha_1000.png" alt="Kombucha 1000ml">
+                  <div class="card-content">
+                    <h4>Kombucha (1000ml)</h4>
+                  </div>
+                  <div class="card-actions">
+                    <button class="btn-secondary" onclick="verDescripcion('kombucha_1000.png', 'Kombucha (1000ml)', 'Bebida probiótica a base de té fermentado por un cultivo de levaduras y bacterias (SCOBY), con un sabor único.\\n\\nContenido: 1000 ml\\n\\nPVP: 5.50 USD (no incluye IVA)', 'probioticos')">Ver más</button>
+                    <button class="action-btn" onclick="addToCart('Kombucha (1000ml)', 5.50)">Añadir al Carrito</button>
+                  </div>
+                </div>
+
+              </div>
+              <div style="text-align:center; margin-top:2rem;">
+                <a class="pill" onclick="cargarPagina('home')">Volver al Inicio</a>
+              </div>
+            </section>`;
+        }
+        
+        cont.innerHTML = html;
+        cont.classList.add("show");
+        window.scrollTo(0, 0);
+      }, 200);
+    }
+
+    window.addEventListener("load", () => {
+      let seccion = location.hash.replace("#", "") || "home";
+      cargarPagina(seccion);
+      updateCart(); // Para inicializar el carrito al cargar la página
+    });
+    window.addEventListener("hashchange", () => {
+      let seccion = location.hash.replace("#", "") || "home";
+      cargarPagina(seccion);
+    });
+  </script>
+</body>
+</html>

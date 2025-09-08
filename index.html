@@ -133,7 +133,7 @@
       gap: .5rem;
       background: var(--accent);
       color: #fff;
-      padding: 0.6rem 1.2rem;
+      padding: 0.8rem 1.5rem; /* Padding ajustado para dos líneas */
       border-radius: 999px;
       text-decoration: none;
       font-weight: 700;
@@ -145,6 +145,8 @@
       min-height: 44px;
       border: none;
       box-shadow: 0 2px 8px rgba(229, 79, 109, 0.3);
+      line-height: 1.2; /* Espacio entre líneas */
+      text-align: center; /* Centrado del texto */
     }
     .pill:hover { background: #F87A90; transform: translateY(-2px); }
     .pill i { pointer-events: none; font-size: 1.1rem; }
@@ -489,6 +491,58 @@
     #whatsapp-checkout { width: 100%; margin-top: 1rem; }
     /* --- FIN ESTILOS DEL CARRITO --- */
 
+    /* --- INICIO: NUEVOS ESTILOS PARA GELATINAS DECORADAS --- */
+    .imagen-principal {
+      display: block;
+      max-width: 100%;
+      width: 500px; /* Ancho máximo de la imagen */
+      margin: 2rem auto; /* Centrado y con espacio */
+      border-radius: 1rem; /* Bordes redondeados */
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .botones-presentaciones {
+      text-align: center; /* Centra los botones */
+      margin-bottom: 2rem;
+    }
+    .contenido-desplegable {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-in-out;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 1rem;
+      margin-top: 1.5rem;
+      padding: 0 2rem; /* Padding horizontal para cuando esté abierto */
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .contenido-desplegable-inner {
+        padding: 2rem 0; /* Padding vertical interior para dar espacio */
+    }
+
+    .contenido-desplegable h3 {
+        text-align: center;
+        color: var(--text);
+    }
+    .contenido-desplegable p {
+        text-align: center;
+    }
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .galeria-grid img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      transition: transform 0.3s;
+    }
+    .galeria-grid img:hover {
+        transform: scale(1.05);
+    }
+    /* --- FIN: NUEVOS ESTILOS --- */
+
   </style>
 </head>
 <body>
@@ -599,6 +653,28 @@
       }
     }
     function escClose(ev) { if (ev.key === "Escape") cerrarModal(); }
+
+    // --- INICIO: NUEVA FUNCIÓN PARA DESPLEGABLES ---
+    function toggleDesplegable(targetId) {
+        const todosLosContenidos = document.querySelectorAll('.contenido-desplegable');
+        const targetElement = document.getElementById(targetId);
+
+        // Cierra todos los demás desplegables antes de abrir el nuevo
+        todosLosContenidos.forEach(content => {
+            if (content.id !== targetId) {
+                content.style.maxHeight = null;
+            }
+        });
+
+        // Abre o cierra el desplegable seleccionado
+        if (targetElement.style.maxHeight) {
+            targetElement.style.maxHeight = null; // Cierra si ya está abierto
+        } else {
+            // Abre estableciendo la altura máxima a la altura real del contenido
+            targetElement.style.maxHeight = targetElement.scrollHeight + "px";
+        }
+    }
+    // --- FIN: NUEVA FUNCIÓN ---
     
     // --- INICIO LÓGICA DEL CARRITO ---
     let cart = [];
@@ -773,7 +849,7 @@
           html = `
             <section>
               <h2>Gelatinas en Vasito</h2>
-              <p>Prácticas presentaciones individuales, para disfrutar en cualquier momento.<br>Contenido: 125 gramos.</p>
+              <p>Prácticas presentations individuales, para disfrutar en cualquier momento.<br>Contenido: 125 gramos.</p>
               
               <div class="info-box">
                 <p>Para pedidos, las cantidades mínimas son de:</p>
@@ -876,33 +952,63 @@
             </section>`;
         }
 
+        // --- INICIO: SECCIÓN DE GELATINAS DECORADAS COMPLETAMENTE MODIFICADA ---
         if (seccion === "geladecoradas") {
           html = `
             <section>
               <h2>Gelatinas Decoradas</h2>
-              <p>Gelatinas artísticas y saludables, ideales para ocasiones especiales.</p>
-              <h3 class="catalog-heading">En base agua</h3>
-              <div class="grid">
-                <div class="card"><img src="imagenes/decoradas/jamaica.jpg" alt="GELAFLORDEJAMAICA"><div class="card-content"><h4>GELAFLORDEJAMAICA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('jamaica.jpg','GELAFLORDEJAMAICA','Un postre refrescante y tropical que combina lo mejor de la flor de Jamaica y las frutas.\\n\\nIngredientes: Flor de Jamaica, Té negro, Manzana, Naranja, Maracuyá, Panela granulada y Gelatina sin sabor. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelaflordejaica, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaFlorDeJamaica (decorada)', 2.00)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/moringa.jpg" alt="GELAMORINGA"><div class="card-content"><h4>GELAMORINGA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('moringa.jpg','GELAMORINGA','La opción perfecta para un dulce nutritivo, lleno del poder natural de la moringa y el té verde.\\n\\nIngredientes: Moringa, Té verde, Té negro, Maracuyá, Piña, Panela granulada. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelamoringa, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMoringa (decorada)', 2.00)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/uvalimon.jpg" alt="GELAUVALIMÓN"><div class="card-content"><h4>GELAUVALIMÓN</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('uvalimon.jpg','GELAUVALIMÓN','Una fusión refrescante y clásica de uva y limón, con un toque inesperado de té.\\n\\nIngredientes: Limón, Uva, Té negro, Maracuyá, Panela granulada. Probiótico: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelauvalimón, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaUvaLimón (decorada)', 2.00)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/horchata.jpg" alt="GELAHORCHATA"><div class="card-content"><h4>GELAHORCHATA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('horchata.jpg','GELAHORCHATA','El sabor tradicional de la horchata, reinventado en un postre único y delicioso.\\n\\nIngredientes: Horchata, Té negro, Maracuyá, Panela granulada. Probióticos: Kéfir de agua y Kombucha.\\n\\nContenido: 100 gramos de Gelahorchata, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.00 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaHorchata (decorada)', 2.00)">Añadir al Carrito</button></div></div>
-              </div>
-              <h3 class="catalog-heading">En base leche</h3>
-              <div class="grid">
-                <div class="card"><img src="imagenes/decoradas/curcumaracuya.jpg" alt="GELACURCUMARACUYÁ"><div class="card-content"><h4>GELACURCUMARACUYÁ</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('curcumaracuya.jpg','GELACURCUMARACUYÁ','El equilibrio perfecto entre lo saludable de la cúrcuma y el sabor exótico y refrescante del maracuyá.\\n\\nIngredientes: Leche entera, Cúrcuma, Pulpa de maracuyá, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelacurcumaracuya, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaCurcumaracuyá (decorada)', 2.25)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/chococanela.jpg" alt="GELACHOCOCANELA"><div class="card-content"><h4>GELACHOCOCANELA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('chococanela.jpg','GELACHOCOCANELA','El abrazo dulce y reconfortante del chocolate orgánico y la canela.\\n\\nIngredientes: Leche entera, Chocolate semiamargo orgánico, Canela, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelachococanela, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaChococanela (decorada)', 2.25)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/avena.jpg" alt="GELAVENA ESPECIAS DULCES"><div class="card-content"><h4>GELAVENA ESPECIAS DULCES</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('avena.jpg','GELAVENA ESPECIAS DULCES','Un postre reconfortante con la calidez de la avena y un toque delicioso de especias dulces.\\n\\nIngredientes: Leche entera, Avena entera, Canela, Pimienta dulce, Clavo de olor, Vainilla, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelavena Especias Dulces, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaAvena Especias (decorada)', 2.25)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/moraremolacha.jpg" alt="GELAMORAREMOLACHA"><div class="card-content"><h4>GELAMORAREMOLACHA</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('moraremolacha.jpg','GELAMORAREMOLACHA','Una sorprendente y deliciosa combinación con la dulzura de la mora y las propiedades de la remolacha.\\n\\nIngredientes: Leche entera, Pulpa de Remolacha, Pulpa de Mora, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelamoraremolacha, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMoraRemolacha (decorada)', 2.25)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/yogukefir.jpg" alt="GELAYOGUKÉFIR"><div class="card-content"><h4>GELAYOGUKÉFIR</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('yogukefir.jpg','GELAYOGUKÉFIR','La doble dosis de probióticos en un postre cremoso que combina el sabor del yogurt natural y el kéfir.\\n\\nIngredientes: Leche entera, Yogurt Natural (Probiótico 1), Panela granulada, Vainilla y Gelatina sin sabor. Probiótico 2: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelayogukéfir, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaYogukéfir (decorada)', 2.25)">Añadir al Carrito</button></div></div>
-                <div class="card"><img src="imagenes/decoradas/matcha.jpg" alt="GELAMATCHALIMÓN"><div class="card-content"><h4>GELAMATCHALIMÓN</h4></div><div class="card-actions"><button class="btn-secondary" onclick="verDescripcion('matcha.jpg','GELAMATCHALIMÓN','La capacidad antioxidante del té matcha combinada con el poder de los probióticos.\\n\\nIngredientes: Leche entera, Té Matcha orgánico, Limón, Panela granulada y Gelatina sin sabor. Probiótico: Kéfir de Leche.\\n\\nContenido: 100 gramos de Gelamatchalimón, 50 gramos de figuritas de gelatina (varios sabores) y 80 gramos de fruta fresca natural.\\n\\nPVP: 2.25 USD','decoradas')">Ver más</button><button class="action-btn" onclick="addToCart('GelaMatchaLimón (decorada)', 2.25)">Añadir al Carrito</button></div></div>
+              <p>Obras de arte comestibles, perfectas para celebrar momentos especiales. Personaliza tu evento con nuestras creaciones únicas, saludables y llenas de sabor.</p>
+              
+              <img src="imagenes/decoradas/gelatinadecoradaprincipal.jpg" alt="Gelatina decorada principal" class="imagen-principal">
+
+              <div class="botones-presentaciones">
+                <a class="pill" onclick="toggleDesplegable('presentacion1')">Presentación 1<br>GALERÍA</a>
+                <a class="pill" onclick="toggleDesplegable('presentacion2')">Presentación 2<br>GALERÍA</a>
+                <a class="pill" onclick="toggleDesplegable('presentacion3')">Presentación 3<br>GALERÍA</a>
               </div>
 
-              <div style="text-align:center; margin-top:2rem;">
+              <div id="presentacion1" class="contenido-desplegable">
+                <div class="contenido-desplegable-inner">
+                  <h3>Presentación 1</h3>
+                  <p>Aquí va el texto descriptivo para la primera presentación. Explica los detalles, sabores, tamaños y ocasiones ideales para este tipo de gelatina.</p>
+                  <div class="galeria-grid">
+                    <img src="imagenes/decoradas/galeria1/foto1.jpg" alt="Foto 1 de la presentación 1">
+                    <img src="imagenes/decoradas/galeria1/foto2.jpg" alt="Foto 2 de la presentación 1">
+                    <img src="imagenes/decoradas/galeria1/foto3.jpg" alt="Foto 3 de la presentación 1">
+                  </div>
+                </div>
+              </div>
+
+              <div id="presentacion2" class="contenido-desplegable">
+                <div class="contenido-desplegable-inner">
+                  <h3>Presentación 2</h3>
+                  <p>Aquí va el texto descriptivo para la segunda presentación. Detalla sus características únicas y por qué es una excelente opción para los clientes.</p>
+                  <div class="galeria-grid">
+                    <img src="imagenes/decoradas/galeria2/foto1.jpg" alt="Foto 1 de la presentación 2">
+                    <img src="imagenes/decoradas/galeria2/foto2.jpg" alt="Foto 2 de la presentación 2">
+                    <img src="imagenes/decoradas/galeria2/foto3.jpg" alt="Foto 3 de la presentación 2">
+                    <img src="imagenes/decoradas/galeria2/foto4.jpg" alt="Foto 4 de la presentación 2">
+                  </div>
+                </div>
+              </div>
+
+              <div id="presentacion3" class="contenido-desplegable">
+                <div class="contenido-desplegable-inner">
+                  <h3>Presentación 3</h3>
+                  <p>Aquí va el texto descriptivo para la tercera presentación. Puedes hablar sobre personalización, ingredientes especiales o cualquier otro detalle relevante.</p>
+                  <div class="galeria-grid">
+                    <img src="imagenes/decoradas/galeria3/foto1.jpg" alt="Foto 1 de la presentación 3">
+                    <img src="imagenes/decoradas/galeria3/foto2.jpg" alt="Foto 2 de la presentación 3">
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align:center; margin-top:3rem;">
                 <a class="pill" onclick="cargarPagina('gelatinas')">Volver a Gelatinas</a>
               </div>
             </section>`;
         }
+        // --- FIN: SECCIÓN MODIFICADA ---
         
         if (seccion === "bebidasFuncionales") {
           html = `
@@ -1062,12 +1168,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
